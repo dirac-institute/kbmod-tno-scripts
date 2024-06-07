@@ -304,6 +304,7 @@ if __name__ == '__main__':
     elapsed = round(time.time() - elapsed, 1)
     print_debug(f"{elapsed} seconds elapsed to create EBD WorkUnit.")
     
+    del orig_wu # 6/7/2024 COC
     
     # Reproject to a common WCS using the WCS for our patch
     print_debug(f"Reprojecting WorkUnit...")
