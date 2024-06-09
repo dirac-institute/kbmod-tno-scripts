@@ -271,9 +271,12 @@ if __name__ == '__main__':
     orig_wu_file = os.path.join(args.result_dir, "orig_wu.fits")
     print_debug(f"Saving original work unit to: {orig_wu_file}")
     last_time = time.time()
+    if len(glob.glob(orig_wu_file)) > 0: # handling bug where overwrite does not work for .to_fits below 6/8/2024 COC
+        print_debug(f'Deleting existing {orig_wu_file}.')
+        os.remove(orig_wu_file)
     orig_wu.to_fits(orig_wu_file, overwrite=True)
     elapsed = round(time.time() - last_time, 1)
-    print_debug(f"{elapsed} seconds to write WorkUnit to disk: {origin_wu_file}")
+    print_debug(f"{elapsed} seconds to write WorkUnit to disk: {orig_wu_file}")
     
     # gather elements needed for reproject phase
     imgs = orig_wu.im_stack
