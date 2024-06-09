@@ -319,7 +319,7 @@ if __name__ == '__main__':
     del orig_wu # 6/7/2024 COC
     
     # Reproject to a common WCS using the WCS for our patch
-    print_debug(f"Reprojecting WorkUnit...")
+    print_debug(f"Reprojecting WorkUnit with {n_workers} workers...")
     last_time = time.time()
     reprojected_wu = reprojection.reproject_work_unit(ebd_wu, patch_wcs, frame="ebd", max_parallel_processes=n_workers)
     elapsed = round(time.time() - last_time, 1)
@@ -333,3 +333,4 @@ if __name__ == '__main__':
     reprojected_wu.to_fits(reprojected_wu_file)
     elapsed = round(time.time() - last_time, 1)
     print_debug(f"{elapsed} seconds elapsed to create the reprojected WorkUnit: {reprojected_wu_file}")
+    
