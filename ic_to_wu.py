@@ -87,10 +87,17 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
     
+    DEBUG = True
+    if args.silence:
+        DEBUG = False
+    else:
+        logging.basicConfig(level=logging.DEBUG)
+    
     if args.uri_file != None:
-        uri_params = get_params_from_uri_file(uri_file=args.uri_file, verbose=args.verbose)
+        uri_params = get_params_from_uri_file(uri_file=args.uri_file, verbose=DEBUG)
     else:
         uri_params = {}
+    print_debug(f'Saw uri_params={uri_params}')
     
     if args.ic_input_file is None:
         print("Please provide a file containing the ImageCollection to be processed.")
@@ -103,10 +110,10 @@ if __name__ == '__main__':
         exit(1)
     
     if args.patch_corners is None:
-        if "patch_corners" not in uri_params:
+        if "patch_box" not in uri_params:
             print("Please provide the corners of the patch in decimal degree (RA, Dec) coordinates, or pass the values through the URI file in the #patch_corners line.")
             exit(1)
-        patch_corners = uri_params['patch_corners']
+        patch_corners = uri_params['patch_box']
     else:
         patch_corners = eval(args.patch_corners) # TODO less dangerous way to evaluate patch corners
     print_debug("Patch corners:", patch_corners)
@@ -118,13 +125,7 @@ if __name__ == '__main__':
         guess_dist = args.guess_dist
     else:
         guess_dist = args.guess_dist
-    
-    DEBUG = True
-    if args.silence:
-        DEBUG = False
-    else:
-        logging.basicConfig(level=logging.DEBUG)
-    
+        
     if args.n_workers is not None and args.n_workers >=1 and args.n_workers <= 65:
         n_workers = args.n_workers
     
@@ -164,15 +165,21 @@ def patch_arcmin_to_pixels(patch_size_arcmin, pixel_scale_arcsec_per_pix, verbos
     return x_pixels, y_pixels
 
 if __name__ == '__main__':
+    # initial pixel scale pass
+    pixel_scale = args.pixel_scale
+    if pixel_scale == None:
+        if 'pixel_scale' in uri_params:
+            pixel_scale = uri_params['pixel_scale']
+    #
     # handle image dimensions
     image_width = args.image_width
     image_height = args.image_height
     if image_width == None or image_height == None:
-        if 'patch_size' not in uri_params:
+        if 'patch_box' not in uri_params:
             raise KeyError(f'Must supply image dimensions (image_width, image_height) or #patch_size= must be in a specified URI file.')
-        if args.pixel_scale == None and 'pixel_scale' not in uri_params:
+        if pixel_scale == None:
             raise KeyError(f'When patch pixel dimensions are not specifified, the user must supply a pixel scale via the command line or the uri file.')
-        image_width, image_height = patch_arcmin_to_pixels(patch_size_arcmin=uri_params['patch_size'], pixel_scale_arcsec_per_pix=args.pixel_scale, verbose=DEBUG)
+        image_width, image_height = patch_arcmin_to_pixels(patch_size_arcmin=uri_params['patch_size'], pixel_scale_arcsec_per_pix=pixel_scale, verbose=DEBUG)
     print_debug(f'(image_width, image_height) is ({image_width}, {image_height}).')
 
 
@@ -247,8 +254,9 @@ if __name__ == '__main__':
     # Create a WCS object for the patch. This will be our common reprojection WCS
     patch_wcs = create_wcs_from_corners(
         patch_corners,
-        args.image_width,
-        args.image_height, 
+        image_width,
+        image_height,
+        pixel_scale=pixel_scale,
         save_fits=False)
     
     ic = ImageCollection.read(args.ic_input_file, format='ascii.ecsv')
