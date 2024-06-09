@@ -13,6 +13,7 @@ import astropy.time
 import numpy as np
 import logging
 import os
+import glob
 import time
 
 # A function that wraps print_debugs with a timestamp if DEBUG is True
@@ -122,7 +123,7 @@ if __name__ == '__main__':
         if 'dist_au' not in uri_params:
             print("Please provide a heliocentric distance (in au) to use for the barycentric correction, or specify a URI file that has the #dist_au line.")
             exit(1)
-        guess_dist = args.guess_dist
+        guess_dist = uri_params['dist_au']
     else:
         guess_dist = args.guess_dist
         
@@ -295,7 +296,7 @@ if __name__ == '__main__':
         npoints=10, 
         seed=None,
     )
-    elapsed = round(time.time() - elapsed, 1)
+    elapsed = round(time.time() - last_time, 1)
     print_debug(f"{elapsed} seconds elapsed for transform WCS objects to EBD phase.")
     
     if len(orig_wu._per_image_wcs) != len(ebd_per_image_wcs):
@@ -312,7 +313,7 @@ if __name__ == '__main__':
         heliocentric_distance=guess_dist,#args.guess_dist,
         geocentric_distances=geocentric_dists,
     )
-    elapsed = round(time.time() - elapsed, 1)
+    elapsed = round(time.time() - last_time, 1)
     print_debug(f"{elapsed} seconds elapsed to create EBD WorkUnit.")
     
     del orig_wu # 6/7/2024 COC
@@ -321,7 +322,7 @@ if __name__ == '__main__':
     print_debug(f"Reprojecting WorkUnit...")
     last_time = time.time()
     reprojected_wu = reprojection.reproject_work_unit(ebd_wu, patch_wcs, frame="ebd", max_parallel_processes=n_workers)
-    elapsed = round(time.time() - elapsed, 1)
+    elapsed = round(time.time() - last_time, 1)
     print_debug(f"{elapsed} seconds elapsed to create the reprojected WorkUnit.")
 #   print_debug("Reprojected WorkUnit created")
     
@@ -330,6 +331,5 @@ if __name__ == '__main__':
     print_debug(f"Saving reprojected work unit to: {reprojected_wu_file}")
     last_time = time.time()
     reprojected_wu.to_fits(reprojected_wu_file)
-    elapsed = round(time.time() - elapsed, 1)
+    elapsed = round(time.time() - last_time, 1)
     print_debug(f"{elapsed} seconds elapsed to create the reprojected WorkUnit: {reprojected_wu_file}")
-    
