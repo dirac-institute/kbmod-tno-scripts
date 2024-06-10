@@ -86,6 +86,8 @@ if __name__ == '__main__':
     parser.add_argument('--silence', action='store_true', help="Don't print debug messages.")
 #   parser.add_argument('--verbose', type=bool, help='Print more messages. Default is False.', default=False)
     
+    parser.add_argument('--overwrite', action='store_true', help="Overwrite existing WorkUnit files.")
+    
     args = parser.parse_args()
     
     DEBUG = True
@@ -260,24 +262,39 @@ if __name__ == '__main__':
         pixel_scale=pixel_scale,
         save_fits=False)
     
-    ic = ImageCollection.read(args.ic_input_file, format='ascii.ecsv')
-    print_debug(f"ImageCollection read from {args.ic_input_file}, creating work unit next...")
-
-    last_time = time.time()
-    orig_wu = ic.toWorkUnit(config=kbmod.configuration.SearchConfiguration.from_file(args.search_config))
-    elapsed = round(time.time() - last_time,1)
-    print_debug(f"{elapsed} seconds to create WorkUnit.")
     
     # TODO re-enable; reenabled 6/7/2024 COC
     orig_wu_file = os.path.join(args.result_dir, "orig_wu.fits")
     print_debug(f"Saving original work unit to: {orig_wu_file}")
     last_time = time.time()
-    if len(glob.glob(orig_wu_file)) > 0: # handling bug where overwrite does not work for .to_fits below 6/8/2024 COC
-        print_debug(f'Deleting existing {orig_wu_file}.')
-        os.remove(orig_wu_file)
-    orig_wu.to_fits(orig_wu_file, overwrite=True)
-    elapsed = round(time.time() - last_time, 1)
-    print_debug(f"{elapsed} seconds to write WorkUnit to disk: {orig_wu_file}")
+    if len(glob.glob(orig_wu_file)) > 0:
+        if args.overwrite == True: # handling bug where overwrite does not work for .to_fits below 6/8/2024 COC
+            print_debug(f'Overwrite was {args.overwrite}. Deleting existing {orig_wu_file}.')
+            os.remove(orig_wu_file)
+            make_wu = True
+        else:
+            make_wu = False
+    else:
+        make_wu = True
+    
+    last_time = time.time()
+    if make_wu == True:
+        ic = ImageCollection.read(args.ic_input_file, format='ascii.ecsv')
+        print_debug(f"ImageCollection read from {args.ic_input_file}, creating work unit next...")
+        #
+        orig_wu = ic.toWorkUnit(config=kbmod.configuration.SearchConfiguration.from_file(args.search_config))
+        elapsed = round(time.time() - last_time,1)
+        print_debug(f"{elapsed} seconds to create WorkUnit.")
+        #
+        orig_wu.to_fits(orig_wu_file, overwrite=True)
+        elapsed = round(time.time() - last_time, 1)
+        print_debug(f"{elapsed} seconds to write WorkUnit to disk: {orig_wu_file}")
+    else:
+        print(f'Reading existing WorkUnit from disk: {orig_wu_file}')
+        orig_wu = WorkUnit.from_fits(orig_wu_file)
+        elapsed = round(time.time() - last_time,1)
+        print_debug(f"{elapsed} seconds to read original WorkUnit ({orig_wu_file}).")
+        
     
     # gather elements needed for reproject phase
     imgs = orig_wu.im_stack
