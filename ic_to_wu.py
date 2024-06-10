@@ -280,7 +280,7 @@ if __name__ == '__main__':
     last_time = time.time()
     if make_wu == True:
         ic = ImageCollection.read(args.ic_input_file, format='ascii.ecsv')
-        print_debug(f"ImageCollection read from {args.ic_input_file}, creating work unit next...")
+        print_debug(f"ImageCollection read from {args.ic_input_file}, creating work unit next. Note: we will exit afterwards as we are in original WorkUnit mode.")
         #
         orig_wu = ic.toWorkUnit(config=kbmod.configuration.SearchConfiguration.from_file(args.search_config))
         elapsed = round(time.time() - last_time,1)
@@ -289,6 +289,8 @@ if __name__ == '__main__':
         orig_wu.to_fits(orig_wu_file, overwrite=True)
         elapsed = round(time.time() - last_time, 1)
         print_debug(f"{elapsed} seconds to write WorkUnit to disk: {orig_wu_file}")
+        print_debug(f"Kludge: exiting now that we have made the original WorkUnit.")
+        exit()
     else:
         print(f'Reading existing WorkUnit from disk: {orig_wu_file}')
         orig_wu = WorkUnit.from_fits(orig_wu_file)
