@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH --job-name="ReprojWU"
-#SBATCH --output="RerpojectWU-%A_%a.out"
+#SBATCH --output="RepojectWU-%A_%a.out"
 #SBATCH --mem=512G  # 410 used for 189 UTs with 6 images each UT layer
 #SBATCH -c8       #x cores - should be 8 for reprojecting step (more will require much more RAM which we do not have)
 #SBATCH --array=1%250# START WITH ONE FOR SED!!
@@ -54,6 +54,7 @@ check_uris
 
 echo "$(date) -- URIS_FILE was $URIS_FILE"
 
+# UNTESTED; TODO test
 # If no Image Collection ecsv, make it now, though we are in the reproject phase, this could prevent a job failure. 6/10/2024 COC
 if [  $(find . -maxdepth 1 -name "ic.ecsv" | wc -l) -lt 1 ];then
 	echo "$(date) -- Could not find ic.ecsv. Generating now, but this will only work if file paths do not require augmentation."
@@ -62,6 +63,7 @@ fi
 
 result_dir="output"
 
+# UNTESTED; TODO test
 ## If no original wu, complain, but proceed 6/10/2024 COC
 if [  $(find $result_dir -maxdepth 1 -name "orig_wu.fits" | wc -l) -lt 1 ];then
 	echo "$(date) -- WARNING we could not find orig_wu.fits which means our mode just became Original WorkUnit instead of Reproject."
