@@ -16,6 +16,7 @@
 #mkdir -p $XDG_CONFIG_HOME
 #mkdir -p $XDG_CACHE_HOME
 
+echo "hostname is $(hostname)"
 
 scriptdir="/gscratch/dirac/coc123/kbmod-tno-scripts"
 

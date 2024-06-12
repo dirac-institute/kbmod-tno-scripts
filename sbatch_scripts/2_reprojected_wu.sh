@@ -16,6 +16,8 @@
 #mkdir -p $XDG_CONFIG_HOME
 #mkdir -p $XDG_CACHE_HOME
 
+echo "hostname is $(hostname)"
+
 scriptdir="/gscratch/dirac/coc123/kbmod-tno-scripts"
 
 # We want bindir set in case the correct environment was accidentally not loaded prior to sbatch.
