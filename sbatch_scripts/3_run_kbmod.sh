@@ -4,7 +4,7 @@
 #SBATCH --mem=300G  # per WSB 6/13/2024
 #SBATCH -c1       #x cores - should be 8 for reprojecting step (more will require much more RAM which we do not have)
 #SBATCH --gpus=1
-#SBATCH --array=2%25# START WITH ONE FOR SED!!
+#SBATCH --array=0-1%25
 #SBATCH --account=escience
 #SBATCH --partition=ckpt-g2
 #SBATCH --signal=SIGALRM
