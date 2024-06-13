@@ -5,7 +5,7 @@
 #SBATCH -c1                                    #x cores - should be 1 for Original WU
 #SBATCH --array=1%250# START WITH ONE FOR SED!!
 #SBATCH --account=escience
-#SBATCH --partition=gpu-a40
+#SBATCH --partition=ckpt-all
 #SBATCH --signal=SIGALRM
 #SBATCH --time=120
 #SBATCH --export=ALL

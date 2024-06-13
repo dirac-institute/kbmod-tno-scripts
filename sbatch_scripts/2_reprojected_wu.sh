@@ -5,7 +5,7 @@
 #SBATCH -c8       #x cores - should be 8 for reprojecting step (more will require much more RAM which we do not have)
 #SBATCH --array=1%250# START WITH ONE FOR SED!!
 #SBATCH --account=escience
-#SBATCH --partition=gpu-a40
+#SBATCH --partition=ckpt-all
 #SBATCH --signal=SIGALRM
 #SBATCH --time=239 # one minute under the limit
 #SBATCH --export=ALL
