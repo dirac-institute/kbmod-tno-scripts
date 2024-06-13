@@ -19,6 +19,10 @@
 
 echo "hostname is $(hostname)"
 
+echo ""
+nvidia-smi
+echo ""
+
 scriptdir="/gscratch/dirac/coc123/kbmod-tno-scripts"
 
 # We want bindir set in case the correct environment was accidentally not loaded prior to sbatch.
