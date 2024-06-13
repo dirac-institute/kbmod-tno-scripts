@@ -255,12 +255,18 @@ if __name__ == '__main__':
     print_debug(f"Creating WCS from patch")
     
     # Create a WCS object for the patch. This will be our common reprojection WCS
+    patch_fits_name = f"patch.fits"
+    if 'patch_id' in uri_params:
+        patch_fits_name = f"patch_{uri_params['patch_id']}.fits"
+    #
     patch_wcs = create_wcs_from_corners(
         patch_corners,
         image_width,
         image_height,
         pixel_scale=pixel_scale,
-        save_fits=False)
+        save_fits=True,
+        filename=os.path.join(args.result_dir, )
+    )
     
     
     # TODO re-enable; reenabled 6/7/2024 COC
