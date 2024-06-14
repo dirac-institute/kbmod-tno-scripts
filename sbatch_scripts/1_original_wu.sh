@@ -70,6 +70,6 @@ if [  $(find $result_dir -maxdepth 1 -name "orig_wu.fits" | wc -l) -gt 0 ];then
 	echo "$(date) -- WARNING we found an existing orig_wu.fits but we are in Original WorkUnit mode. This job will likely never finish."
 fi
 
-srun $bindir/python "$scriptdir/ic_to_wu.py" --ic_input_file="ic.ecsv" --result_dir="output" --search_config="$scriptdir/search_config.yaml" --uri_file "$URIS_FILE"
+srun $bindir/python "$scriptdir/ic_to_wu.py" --ic_input_file="ic.ecsv" --result_dir="$result_dir" --search_config="$scriptdir/search_config.yaml" --uri_file "$URIS_FILE"
 
 echo "$(date) -- Finished original WorkUnit phase."

@@ -265,7 +265,7 @@ if __name__ == '__main__':
         image_height,
         pixel_scale=pixel_scale,
         save_fits=True,
-        filename=os.path.join(args.result_dir, )
+        filename=os.path.join(args.result_dir, patch_fits_name)
     )
     
     
