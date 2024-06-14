@@ -37,7 +37,7 @@ echo "$(date) -- rundir is $rundir"
 config_start="exhaustive_search_config_"
 config_end="_vel.yaml"
 
-result_dir="output"
+result_dir="output_""$SLURM_JOB_ID"
 mkdir -p "$result_dir"
 
 # TODO make this prettier
