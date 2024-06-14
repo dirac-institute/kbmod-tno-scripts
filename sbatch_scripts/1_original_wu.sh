@@ -59,10 +59,12 @@ echo "$(date) -- URIS_FILE was $URIS_FILE"
 # If no Image Collection ecsv, make it now 6/10/2024 COC
 if [  $(find . -maxdepth 1 -name "ic.ecsv" | wc -l) -lt 1 ];then
 	echo "$(date) -- Could not find ic.ecsv. Generating now, but this will only work if file paths do not require augmentation."
-	srun python $bindir/python "$scriptdir/create_ic.py" --target_uris_file "$URIS_FILE" --ic_output_file "ic.ecsv"
+	srun $bindir/python "$scriptdir/create_ic.py" --target_uris_file "$URIS_FILE" --ic_output_file "ic.ecsv"
 fi
 
 result_dir="output"
+mkdir -p "$result_dir"
+
 ## If already an original wu, complain, but proceed 6/10/2024 COC
 if [  $(find $result_dir -maxdepth 1 -name "orig_wu.fits" | wc -l) -gt 0 ];then
 	echo "$(date) -- WARNING we found an existing orig_wu.fits but we are in Original WorkUnit mode. This job will likely never finish."
