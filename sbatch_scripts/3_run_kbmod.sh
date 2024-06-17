@@ -1,10 +1,10 @@
 #!/bin/sh
 #SBATCH --job-name="KBMOD"
 #SBATCH --output="KBMOD-%A_%a.out"
-#SBATCH --mem=300G  # per WSB 6/13/2024
+#SBATCH --mem=340G  # per WSB 6/13/2024
 #SBATCH -c1       #x cores - should be 8 for reprojecting step (more will require much more RAM which we do not have)
 #SBATCH --gpus=1
-#SBATCH --array=0-1%25
+#SBATCH --array=0%25 # was 0-1 but now we just have the one config
 #SBATCH --account=escience
 #SBATCH --partition=ckpt-g2
 #SBATCH --signal=SIGALRM
@@ -34,8 +34,8 @@ rundir=$(pwd)
 echo "$(date) -- rundir is $rundir"
 
 # e.g., "exhaustive_search_config_fast_vel.yaml"
-config_start="exhaustive_search_config_"
-config_end="_vel.yaml"
+#config_start="exhaustive_search_config_"
+#config_end="_vel.yaml"
 
 result_dir="output_""$SLURM_JOB_ID"_"$SLURM_ARRAY_TASK_ID"
 mkdir -p "$result_dir"
@@ -45,7 +45,8 @@ s="slow"
 if [ $SLURM_ARRAY_TASK_ID -gt 0 ];then
 	s="fast"
 fi
-configfile="$config_start""$s""$config_end"
+#configfile="$config_start""$s""$config_end"
+configfile="$scriptdir/search_config.yaml"
 echo "$(date) -- -configfile was $configfile"
 
 wu_file=$(find . -maxdepth 2 -name "reprojected_wu.fits" | head -n1)
