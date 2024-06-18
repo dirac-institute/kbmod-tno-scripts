@@ -173,9 +173,9 @@ def plot_multi_night_results(res, wu, save_path, verbose=True):
 if __name__ == "__main__":
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="Generate a plot for each of the multi-night results")
-    parser.add_argument("work_unit", help="The work unit file to generate the results load")
-    parser.add_argument("results", help="The KBMOD results directory to load")
-    parser.add_argument("save_path", help="The path to save the plots to")
+    parser.add_argument("--work_unit", help="The work unit file to generate the results load")
+    parser.add_argument("--results", help="The KBMOD results directory to load")
+    parser.add_argument("--save_path", help="The path to save the plots to")
     args = parser.parse_args()
 
     if not os.path.exists(args.work_unit):
