@@ -71,6 +71,8 @@ if [  $(find $result_dir -maxdepth 1 -name "orig_wu.fits" | wc -l) -lt 1 ];then
 	echo "$(date) -- WARNING we could not find orig_wu.fits which means our mode just became Original WorkUnit instead of Reproject."
 fi
 
-srun $bindir/python "$scriptdir/ic_to_wu.py" --ic_input_file="ic.ecsv" --result_dir="$result_dir" --search_config="$scriptdir/search_config.yaml" --uri_file "$URIS_FILE"
+echo "$(date) -- Using $SLURM_CPUS_PER_TASK as n_workers" # 6/17/2024 COC
+
+srun $bindir/python "$scriptdir/ic_to_wu.py" --ic_input_file="ic.ecsv" --result_dir="$result_dir" --search_config="$scriptdir/search_config.yaml" --uri_file "$URIS_FILE" --n_workers "$SLURM_CPUS_PER_TASK"
 
 echo "$(date) -- Finished reproject phase."
