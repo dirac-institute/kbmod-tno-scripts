@@ -50,6 +50,6 @@ configfile="$scriptdir/search_config.yaml"
 echo "$(date) -- -configfile was $configfile"
 
 wu_file=$(find . -maxdepth 2 -name "reprojected_wu.fits" | head -n1)
-srun $bindir/python "$scriptdir/kbmod_run_wu.py" --wu_input_file "$wu_file" --result_dir="$result_dir" --search_config="$scriptdir/$configfile"
+srun $bindir/python "$scriptdir/kbmod_run_wu.py" --wu_input_file "$wu_file" --result_dir="$result_dir" --search_config="$configfile"
 
 echo "$(date) -- Finished KBMOD phase with configfile: $configfile"
