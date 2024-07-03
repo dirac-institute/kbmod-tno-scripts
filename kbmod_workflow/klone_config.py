@@ -17,12 +17,11 @@ def klone_config():
                     account="astro",
                     min_blocks=0,
                     max_blocks=4,
-                    init_blocks=0,
+                    init_blocks=1,
                     parallelism=1,
                     nodes_per_block=1,
                     cores_per_node=1, # perhaps should be 8???
                     mem_per_node=64, # In GB
-                    launcher=SrunLauncher(),
                     exclusive=False,
                     walltime=walltimes["compute-bigmem"],
                 ),
