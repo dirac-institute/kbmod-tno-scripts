@@ -14,4 +14,10 @@ def configure_logger(name, file_path):
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
 
+    #? The following will cause _some_ parsl logging to end up in the same file.
+    # logging.basicConfig(filename=file_path,
+    #                     level=logging.DEBUG,
+    #                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # logger = logging.getLogger(name)
+
     return logger
